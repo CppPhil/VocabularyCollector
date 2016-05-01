@@ -30,6 +30,7 @@ $RECYCLE.BIN/
 *.obj
 
 # Precompiled Headers
+*.pchast
 *.gch
 *.pch
 

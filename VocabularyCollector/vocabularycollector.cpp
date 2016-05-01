@@ -6,7 +6,6 @@
 #include "utils.h"
 #include <fstream>
 #include <QFileDialog>
-#include <memory>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPainter>
@@ -176,10 +175,7 @@ void VocabularyCollector::exportToFile(QString const &fileName) const {
 
 void VocabularyCollector::printTableTo(QTextStream &fstream) const {
     fstream << "English\tGerman\n";
-
-    std::unique_ptr<QTableWidgetItem> tempTableWidgetItem = nullptr;
-    QString tempQString{ };
-
+    
     auto list = ui.tableWidget->findItems(QString{ ".*" }, Qt::MatchRegExp);
     std::vector<std::pair<QString, QString>> vec{ };
     

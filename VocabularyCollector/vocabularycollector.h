@@ -4,7 +4,6 @@
 #include <QClipBoard>
 #include <QNetWorkReply>
 #include <QNetworkAccessManager>
-#include <memory>
 #include "ui_vocabularycollector.h"
 
 #ifdef TRANSLATE_TEXT_DUMMY
