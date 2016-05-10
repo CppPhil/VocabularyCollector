@@ -38,6 +38,7 @@ public slots:
     void createSaveFileDialog() const;
     void createPrintDialog() const noexcept;
     void createDeleteEntryDialog();
+    void importFromFileDialog();
 
 signals:
     void signalDeleteRow(int);
@@ -46,6 +47,8 @@ private:
     void exportToFile(QString const &fileName) const;
 
     void printTableTo(QTextStream &fstream) const;
+
+    void importFromFile(std::string const &file);
 
     static QString const notARealText;
 

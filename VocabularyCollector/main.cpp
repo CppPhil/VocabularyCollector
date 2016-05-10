@@ -4,10 +4,8 @@
 
 /*
     TODO:
-         remove items from list
          make exporting to file prettier
          make printing prettier
-         import from file
          require http lookup to be enabled specifically
 */
 

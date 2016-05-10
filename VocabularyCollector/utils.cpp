@@ -2,6 +2,8 @@
 #include "utils.h"
 #include <regex>
 #include <QMessageBox>
+#include <string>
+#include <algorithm>
 
 namespace utils {
 
@@ -91,5 +93,9 @@ namespace utils {
             messageBox.setText(str);
             messageBox.exec();
         }
+    }
+
+    void removeNewlinesFromString(std::string &s) {
+        s.erase(std::remove(std::begin(s), std::end(s), '\n'), std::end(s));
     }
 }

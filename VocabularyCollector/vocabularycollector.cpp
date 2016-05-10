@@ -11,6 +11,7 @@
 #include <QPainter>
 #include <QInputDialog>
 #include <algorithm>
+#include <sstream>
 
 QString const VocabularyCollector::notARealText = "este no es un texto real.";
 
@@ -54,6 +55,9 @@ VocabularyCollector::VocabularyCollector(QWidget *parent)
 
     connect(this, SIGNAL(signalDeleteRow(int)),
             ui.tableWidget, SLOT(removeRow(int)));
+
+    connect(ui.actionImport_from_file, SIGNAL(triggered(bool)),
+            this, SLOT(importFromFileDialog()));
 }
 
 void VocabularyCollector::insertVocab(QString englishText, QString germanText) {
@@ -145,21 +149,28 @@ void VocabularyCollector::createSaveFileDialog() const {
 }
 
 void VocabularyCollector::createPrintDialog() const noexcept {
+    static auto constexpr fontSize = 26;
     QString text{ };
     QPrinter printer{ };
+    printer.setPaperSize(QPrinter::A4);
+
     QPrintDialog printDialog{ &printer };
     if (printDialog.exec() == QDialog::Accepted) {
         QTextStream textStream{ &text };
         printTableTo(textStream);
 
+        QFont font{ QString{ "Arial" }, fontSize };
+
         QPainter painter{ };
+        painter.setFont(font);
         painter.begin(&printer);
+        auto finalAct = utils::finally([&painter] {
+            painter.end();
+        });
         painter.drawText(QRectF{ QPointF{ 10.F, 10.F }, QPointF{ 5000.F, 5000.F } }, text);
-        painter.end();
     } else {
         utils::showMsgBox(QString{ "Invalid printer was selected." });
     }
-
 }
 
 void VocabularyCollector::createDeleteEntryDialog() {
@@ -175,12 +186,24 @@ void VocabularyCollector::createDeleteEntryDialog() {
     auto const startValue = minValue;
     
     bool ok{ }; // will be true if user clicked OK; will be false otherwise
-    auto rowToDelete = QInputDialog::getInt(parent, tr(title), tr(text),
+    auto rowToDelete = QInputDialog::getInt(parent, title, text,
                                             startValue, minValue, maxValue,
                                             step, &ok) - offset;
 
     if (ok) { // if the user hit OK; delete the row.
         emit signalDeleteRow(rowToDelete);
+    }
+}
+
+void VocabularyCollector::importFromFileDialog() {
+    auto fileName = QFileDialog::getOpenFileName(this, // parent
+                                                "Open file to import", // caption
+                                                QString{ }, // dir
+                                                "Text document(*.txt)"); // filter
+
+    if (!fileName.isNull()) {
+        auto file = fileName.toStdString();
+        importFromFile(file);
     }
 }
 
@@ -203,7 +226,15 @@ void VocabularyCollector::exportToFile(QString const &fileName) const {
 }
 
 void VocabularyCollector::printTableTo(QTextStream &fstream) const {
-    fstream << "English\tGerman\n";
+    static auto constexpr fieldWidth = 25;
+
+    auto finalAct = utils::finally([&fstream] {
+        fstream << flush;
+        fstream.reset();        
+    });
+
+    fstream << qSetFieldWidth(fieldWidth) << left << "English"
+            << right << "German" << "\n\n";
     
     auto list = ui.tableWidget->findItems(QString{ ".*" }, Qt::MatchRegExp);
     std::vector<std::pair<QString, QString>> vec{ };
@@ -224,6 +255,39 @@ void VocabularyCollector::printTableTo(QTextStream &fstream) const {
     }
 
     for (auto &&e : vec) {
-        fstream << e.first << '\t' << e.second << '\n';
+        fstream << left << e.first 
+                << right << e.second << '\n';
     }
 }
+
+void VocabularyCollector::importFromFile(std::string const &file) {
+    std::ifstream ifs{ file };
+    if (!ifs) {
+        throw std::runtime_error{ "could not open file in importFromFile" };
+    }
+
+    std::ostringstream ostr{ };
+    ostr << ifs.rdbuf();
+
+    auto content = ostr.str();
+
+    auto strings = utils::split(content, std::string{ " " });
+    strings.erase(std::begin(strings), std::begin(strings) + 2);
+    strings.erase(std::remove(std::begin(strings), std::end(strings), "\n"), std::end(strings));
+    for (auto &&e : strings) {
+        utils::removeNewlinesFromString(e);
+    }
+    
+
+    if (strings.size() % 2 != 0) {
+        return;
+    }
+
+    auto it1 = std::begin(strings);
+    auto end = std::end(strings);
+
+    for (; it1 != end; ++++it1) {
+        insertVocab(QString::fromStdString(*it1), QString::fromStdString(*(it1 + 1)));
+    }
+}
+
