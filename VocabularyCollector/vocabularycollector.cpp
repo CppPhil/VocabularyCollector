@@ -9,6 +9,8 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPainter>
+#include <QInputDialog>
+#include <algorithm>
 
 QString const VocabularyCollector::notARealText = "este no es un texto real.";
 
@@ -32,7 +34,7 @@ VocabularyCollector::VocabularyCollector(QWidget *parent)
 
     clipboard_ = QApplication::clipboard();
 
-    connect(ui.pushButton, SIGNAL(clicked(bool)),
+    connect(ui.pushButtonAdd, SIGNAL(clicked(bool)),
             this, SLOT(insertVocabViaButton()));
 
     connect(clipboard_, SIGNAL(dataChanged()),
@@ -46,6 +48,12 @@ VocabularyCollector::VocabularyCollector(QWidget *parent)
 
     connect(ui.actionPrint_Now, SIGNAL(triggered(bool)),
             this, SLOT(createPrintDialog()));
+
+    connect(ui.pushButtonDeleteEntry, SIGNAL(clicked(bool)),
+            this, SLOT(createDeleteEntryDialog()));
+
+    connect(this, SIGNAL(signalDeleteRow(int)),
+            ui.tableWidget, SLOT(removeRow(int)));
 }
 
 void VocabularyCollector::insertVocab(QString englishText, QString germanText) {
@@ -105,8 +113,9 @@ void VocabularyCollector::insertVocabFromClipboard() {
 */
 
 void VocabularyCollector::netWorkManagerGotData(QNetworkReply *data) {
+    data->deleteLater(); // schedule the object to be deleted upon returning to the event loop
+
     QString str{ data->readAll() };
-    QMessageBox msgBox{ };
 
     auto stdString = str.toStdString();
     auto matches = utils::getRegexMatchesInString(stdString,
@@ -123,8 +132,6 @@ void VocabularyCollector::netWorkManagerGotData(QNetworkReply *data) {
         currentTranslation_ = notARealText;
         return;
     }
-
-    data->deleteLater(); // schedule the object to be deleted upon returning to the event loop
 
     insertVocab(currentEnglishText_, currentTranslation_);
 }
@@ -153,6 +160,28 @@ void VocabularyCollector::createPrintDialog() const noexcept {
         utils::showMsgBox(QString{ "Invalid printer was selected." });
     }
 
+}
+
+void VocabularyCollector::createDeleteEntryDialog() {
+    static auto constexpr title = "Delete entry";
+    static auto constexpr text = "Which row should be removed?";    
+    static auto constexpr step = 1;
+    static auto constexpr offset = 1; // subtract this from the int returned to convert to 0 based indexing.
+    static auto constexpr defaultMin = 1;
+    auto const parent = this;
+
+    auto const maxValue = ui.tableWidget->rowCount();
+    auto const minValue = std::min(defaultMin, maxValue);
+    auto const startValue = minValue;
+    
+    bool ok{ }; // will be true if user clicked OK; will be false otherwise
+    auto rowToDelete = QInputDialog::getInt(parent, tr(title), tr(text),
+                                            startValue, minValue, maxValue,
+                                            step, &ok) - offset;
+
+    if (ok) { // if the user hit OK; delete the row.
+        emit signalDeleteRow(rowToDelete);
+    }
 }
 
 void VocabularyCollector::exportToFile(QString const &fileName) const {

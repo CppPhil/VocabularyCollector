@@ -37,6 +37,10 @@ public slots:
     void netWorkManagerGotData(QNetworkReply *data);
     void createSaveFileDialog() const;
     void createPrintDialog() const noexcept;
+    void createDeleteEntryDialog();
+
+signals:
+    void signalDeleteRow(int);
 
 private:
     void exportToFile(QString const &fileName) const;

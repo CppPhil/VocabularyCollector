@@ -43,7 +43,7 @@
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButtonAdd">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -109,6 +109,19 @@
     </property>
     <property name="text">
      <string>German</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDeleteEntry">
+    <property name="geometry">
+     <rect>
+      <x>534</x>
+      <y>30</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete an entry</string>
     </property>
    </widget>
   </widget>
