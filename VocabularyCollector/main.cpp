@@ -6,7 +6,6 @@
     TODO:
          make exporting to file prettier
          make printing prettier
-         require http lookup to be enabled specifically
 */
 
 int main(int argc, char *argv[]) {

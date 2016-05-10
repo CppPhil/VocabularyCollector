@@ -58,6 +58,9 @@ VocabularyCollector::VocabularyCollector(QWidget *parent)
 
     connect(ui.actionImport_from_file, SIGNAL(triggered(bool)),
             this, SLOT(importFromFileDialog()));
+
+    connect(ui.checkBoxOnlineLookup, SIGNAL(stateChanged(int)),
+            this, SLOT(toggleOnlineLookup(int)));
 }
 
 void VocabularyCollector::insertVocab(QString englishText, QString germanText) {
@@ -79,6 +82,10 @@ void VocabularyCollector::insertVocab(QString englishText, QString germanText) {
     }
 
     if (germanText.isEmpty()) {
+        if (!onlineLookupEnabled_) {
+            return;
+        }
+
         // look up translation
         currentEnglishText_ = englishText;
         netWorkAccessManager_.post(networkRequest, dummy);
@@ -204,6 +211,23 @@ void VocabularyCollector::importFromFileDialog() {
     if (!fileName.isNull()) {
         auto file = fileName.toStdString();
         importFromFile(file);
+    }
+}
+
+void VocabularyCollector::toggleOnlineLookup(int state) {
+    static auto constexpr enableText = "enable online lookup";
+    static auto constexpr disableText = "disable online lookup";
+
+    if (state == Qt::Unchecked) {
+        onlineLookupEnabled_ = false;
+        ui.checkBoxOnlineLookup->setText(enableText);
+    } else if (state == Qt::Checked) {
+        onlineLookupEnabled_ = true;
+        ui.checkBoxOnlineLookup->setText(disableText);
+        utils::showMsgBox(QString{ "The application will now send the "
+                                   "contents of the clipboard to a translation "
+                                   "server whenever vocabulary without a German "
+                                   "translation is added." });
     }
 }
 

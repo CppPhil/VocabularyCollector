@@ -6,131 +6,103 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
-    <height>450</height>
+    <width>1060</width>
+    <height>721</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>VocabularyCollector</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>641</width>
-      <height>321</height>
-     </rect>
-    </property>
-    <property name="rowCount">
-     <number>0</number>
-    </property>
-    <property name="columnCount">
-     <number>2</number>
-    </property>
-    <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>300</number>
-    </attribute>
-    <column>
-     <property name="text">
-      <string>English</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>German</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAdd">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>30</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="locale">
-     <locale language="English" country="UnitedKingdom"/>
-    </property>
-    <property name="text">
-     <string>Add to list</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditEnglish">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>30</y>
-      <width>81</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="locale">
-     <locale language="English" country="UnitedKingdom"/>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditGerman">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>30</y>
-      <width>81</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelEnglish">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="locale">
-     <locale language="English" country="UnitedKingdom"/>
-    </property>
-    <property name="text">
-     <string>English</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelGerman">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>10</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>German</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonDeleteEntry">
-    <property name="geometry">
-     <rect>
-      <x>534</x>
-      <y>30</y>
-      <width>91</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Delete an entry</string>
-    </property>
-   </widget>
+   <property name="focusPolicy">
+    <enum>Qt::TabFocus</enum>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelEnglish">
+      <property name="locale">
+       <locale language="English" country="UnitedKingdom"/>
+      </property>
+      <property name="text">
+       <string>English</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="labelGerman">
+      <property name="text">
+       <string>German</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLineEdit" name="lineEditEnglish">
+      <property name="locale">
+       <locale language="English" country="UnitedKingdom"/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineEditGerman"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="pushButtonAdd">
+      <property name="locale">
+       <locale language="English" country="UnitedKingdom"/>
+      </property>
+      <property name="text">
+       <string>Add to list</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QCheckBox" name="checkBoxOnlineLookup">
+      <property name="toolTip">
+       <string>if enabled the application will fetch missing German translation from an online database</string>
+      </property>
+      <property name="text">
+       <string>enable online lookup</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QPushButton" name="pushButtonDeleteEntry">
+      <property name="text">
+       <string>Delete an entry</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="5">
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="rowCount">
+       <number>0</number>
+      </property>
+      <property name="columnCount">
+       <number>2</number>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>520</number>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>English</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>German</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>1060</width>
      <height>21</height>
     </rect>
    </property>

@@ -39,6 +39,7 @@ public slots:
     void createPrintDialog() const noexcept;
     void createDeleteEntryDialog();
     void importFromFileDialog();
+    void toggleOnlineLookup(int);
 
 signals:
     void signalDeleteRow(int);
@@ -64,4 +65,5 @@ private:
         "&lang=de";
     QString currentTranslation_ = notARealText;
     QString currentEnglishText_ = notARealText;
+    bool onlineLookupEnabled_ = false;
 };
