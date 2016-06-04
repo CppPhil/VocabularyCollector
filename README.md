@@ -1,1 +1,1 @@
-# VocabularyCollector
+# VocabularyCollector application
