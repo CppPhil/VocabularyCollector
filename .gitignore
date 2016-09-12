@@ -355,3 +355,8 @@ Makefile*
 
 # QtCtreator CMake
 CMakeLists.txt.user
+
+### Text Files ###
+*.doc
+*.docx
+*.pdf
