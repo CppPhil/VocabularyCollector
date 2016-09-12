@@ -7,11 +7,11 @@
 #include "ui_vocabularycollector.h"
 
 #ifdef TRANSLATE_TEXT_DUMMY
-    static_assert("TRANSLATE_TEXT_DUMMY was already defined in vocabularycollector.h");
+    static_assert(false, "TRANSLATE_TEXT_DUMMY was already defined in vocabularycollector.h");
 #endif // TRANSLATE_TEXT_DUMMY
 
 #ifdef KEY_DUMMY
-    static_assert("KEY_DUMMY was already defined in vocabularycollector.h");
+    static_assert(false, "KEY_DUMMY was already defined in vocabularycollector.h");
 #endif // KEY_DUMMY
 
 #define TRANSLATE_TEXT_DUMMY    "{PUTTEXTHERE}"
